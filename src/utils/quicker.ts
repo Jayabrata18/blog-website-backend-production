@@ -1,9 +1,11 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import os from 'os';
+import bcrypt from 'bcrypt'
 export default {
     getSystemHealth: () => {
         return {
             cpuUsage: os.loadavg(),
-            totalmemory: `${(os.totalmem() /1024/1024).toFixed(2)} MB`,
+            totalmemory: `${(os.totalmem() / 1024 / 1024).toFixed(2)} MB`,
             freememory: `${(os.freemem() / 1024 / 1024).toFixed(2)} MB`,
             uptime: `${os.uptime() / 3600} hours`,
             hostname: os.hostname(),
@@ -37,5 +39,33 @@ export default {
             hostname: os.hostname(),
             currentdate: new Date().toISOString()
         }
+    },
+    // parsePhoneNumger: (phoneNumber: string) => {
+    //     try {
+    //         const parsedPhoneNumger = parsePhoneNumber(phoneNumber)
+    //         if (parsedPhoneNumger) {
+    //             return {
+    //                 countryCode: parsedPhoneNumger.countryCallingCode,
+    //                 isoCode: parsedPhoneNumger.country || null,
+    //                 internalPhoneNumber: parsedPhoneNumger.formaIternational()
+    //             }
+    //         }
+    //         return {
+    //             countryCode: null,
+    //             isoCode: null,
+    //             internalPhoneNumber: null
+
+    //         }
+    //     } catch {
+    //         return {
+    //             countryCode: null,
+    //             isoCode: null,
+    //             internalPhoneNumber: null
+    //         }
+
+    //     }
+    // }
+    hashPassword: (password: string) => {
+        return bcrypt.hash(password, 10)
     }
 }

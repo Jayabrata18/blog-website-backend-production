@@ -3,8 +3,10 @@ export default {
     SOMETHING_WENT_WRONG: `Something went wrong!!! Please try again later.`,
     NOT_FOUND: (entity: string) => `${entity} not found.`,
     TOO_MANY_REQUESTS: `Too many requests. Please try again later.`,
+    ALREADY_EXIST: (entity: string, identifier: string) => {
+        return `${entity} with ${identifier} already exists.`
+    },
 
-    
     UNAUTHORIZED: `Unauthorized access.`,
     FORBIDDEN: `Forbidden access.`,
     INTERNAL_SERVER_ERROR: `Internal Server Error`,

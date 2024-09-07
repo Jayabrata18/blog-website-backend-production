@@ -1,6 +1,7 @@
 import mongoose from 'mongoose'
 import config from '../config/config'
 import { Pool } from 'pg';
+import userModel from '../model/userModel';
 
 const pgPool = new Pool({
     host: config.POSTGRES_HOST,
@@ -33,4 +34,7 @@ export default {
 
         }
     },
+    findUserByEmail: (email: string) => {
+        return userModel.findOne({ email: email });
+    }
 }
