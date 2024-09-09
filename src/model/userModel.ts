@@ -18,21 +18,22 @@ const userSchema = new mongoose.Schema<IUser>({
         validate: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
         match: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
     },
-    phoneNumber: {
-        _id: false,
-        isoCode: {
-            type: String,
-            required: true
-        },
-        countryCode: {
-            type: String,
-            required: true
-        },
-        internationalNumber: {
-            type: String,
-            required: true
-        }
-    },
+    phoneNumber: String,
+    // phoneNumber: {
+    //     _id: false,
+    //     isoCode: {
+    //         type: String,
+    //         required: true
+    //     },
+    //     countryCode: {
+    //         type: String,
+    //         required: true
+    //     },
+    //     internationalNumber: {
+    //         type: String,
+    //         required: true
+    //     }
+    // },
     password: {
         type: String,
         required: true,

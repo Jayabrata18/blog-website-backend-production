@@ -10,11 +10,12 @@ export interface IRegisterRequestBody {
 export interface IUser {
     name: string;
     email: string;
-    phoneNumber: {
-        isoCode: string;
-        countryCode: string;
-        internationalNumber: string;
-    };
+    phoneNumber: string;
+    // phoneNumber: {
+    //     isoCode: string;
+    //     countryCode: string;
+    //     internationalNumber: string;
+    // };
     password: string;
     timeZone: string;
     role: EUserRole;

@@ -1,6 +1,8 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import os from 'os';
 import bcrypt from 'bcrypt'
+import { v4 } from 'uuid';
+import { randomInt } from 'crypto';
 export default {
     getSystemHealth: () => {
         return {
@@ -67,5 +69,11 @@ export default {
     // }
     hashPassword: (password: string) => {
         return bcrypt.hash(password, 10)
+    },
+    generateRandomId:() => v4(),
+    generateOtp:(length: number) =>{
+        const min = Math.pow(10, length - 1);
+        const max = Math.pow(10, length) - 1;
+        return randomInt(min, max).toString();
     }
 }

@@ -3,9 +3,10 @@ import httpResponse from '../utils/httpResponse';
 import responseMessage from '../constant/responseMessage';
 import httpError from '../utils/httpError';
 import quicker from '../utils/quicker';
-import { IRegisterRequestBody } from '../types/userType';
+import { IRegisterRequestBody, IUser } from '../types/userType';
 import { validateJoiSchema, validateRegisterBody } from '../service/validationService';
 import databaseService from '../service/databaseService';
+import { EUserRole } from '../constant/userConstant';
 
 interface IRegisterRequest extends Request {
     body: IRegisterRequestBody;
@@ -40,7 +41,7 @@ export default {
             if (error) {
                 return httpError(next, error, req, 422)
             }
-            const { email, password } = value
+            const { email, password, consent, phoneNumber, name,  } = value
             //check existing user
             const user = await databaseService.findUserByEmail(email);
             if (user) {
@@ -54,9 +55,46 @@ export default {
 
 
             //Account confirmation
+            const token = quicker.generateRandomId()
+            const code = quicker.generateOtp(6)
+            const payload: IUser = {
+                name,
+                email,
+                phoneNumber,
+                password: hashedPassword,
+                role: EUserRole.USER,
+                accountConformation: {
+                    status: false,
+                    token,
+                    code,
+                    timestamp: ''
+                },
+                passwordReset: {
+                    token: null,
+                    expiry: null,
+                    lastReset: null
+                },
+                lastLogin: null,
+                consent,
+                timeZone: 'UTC'
+
+            }
             //create user
+            const newUser = await databaseService.registerUser(payload)
             //send email
-            httpResponse(req, res, 201, responseMessage.SUCCESS, {});
+            // const confirmationUrl = `${config.FRONTEND_URL}/conformation/${token}?code=${code}`
+            // const to = {email}
+            // const subject = 'Account Confirmation'
+            // const body = `Please click the following link to confirm your account: ${confirmationUrl}`
+            // await quicker.sendEmail(to, subject, body).catch((err) => {
+            // logger.error('EMAIL_SERVICE', {
+            //     meta: {
+            //         error: err.message
+            //     }
+            // })}
+
+
+            httpResponse(req, res, 201, responseMessage.SUCCESS, {_id: newUser._id});
         } catch (error) {
             httpError(next, error, req, 500);
         }
