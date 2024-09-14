@@ -11,7 +11,7 @@ const server = app.listen(config.PORT);
     try {
 
         const mongoConnection = await databaseService.mongoConnect();
-        const postgresConnection = await databaseService.postgresConnect();
+        // const postgresConnection = await databaseService.postgresConnect();
 
         if (mongoConnection) {
             logger.info('MONGODB_DATABASE_CONNECTION_ESTABLISHED', {
@@ -28,23 +28,25 @@ const server = app.listen(config.PORT);
         } else {
             logger.error('MONGODB_DATABASE_CONNECTION_FAILED: No connection object returned.');
         }
-        if (postgresConnection) {
-            logger.info('POSTGRES_DATABASE_CONNECTION_ESTABLISHED', {
-                meta: {
-                    DATABASE_NAME: config.POSTGRES_DB,
-                    HOST: config.POSTGRES_HOST,
-                    PORT: config.POSTGRES_PORT,
-                    USER: config.POSTGRES_USER,
-                    PASSWORD: config.POSTGRES_PASSWORD,    
-                    URI: config.POSTGRES_DATABASE_URL,
+        // if (postgresConnection) {
+        //     logger.info('POSTGRES_DATABASE_CONNECTION_ESTABLISHED', {
+        //         meta: {
+        //             DATABASE_NAME: config.POSTGRES_DB,
+        //             HOST: config.POSTGRES_HOST,
+        //             PORT: config.POSTGRES_PORT,
+        //             USER: config.POSTGRES_USER,
+        //             PASSWORD: config.POSTGRES_PASSWORD,    
+        //             URI: config.POSTGRES_DATABASE_URL,
                 
-                }
-            });
+        //         }
+        //     });
 
-        } else {
-            logger.error('POSTGRES_DATABASE_CONNECTION_FAILED: No connection object returned.');
-        }
-        initRateLimiter(mongoConnection, postgresConnection);
+        // } else {
+        //     logger.error('POSTGRES_DATABASE_CONNECTION_FAILED: No connection object returned.');
+        // }
+        initRateLimiter(mongoConnection,
+            //  postgresConnection
+            );
         logger.info('RATE_LIMIT_MONGO_&_POSTGRES_INITIALIZED',{
             meta: {
                
