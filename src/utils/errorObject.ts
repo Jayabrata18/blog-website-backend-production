@@ -3,7 +3,7 @@ import { THttpError } from '../types/types'
 import responseMessage from '../constant/responseMessage'
 import config from '../config/config'
 import { EApplicationEnviorment } from '../constant/application'
-import logger from './logger'
+// import logger from './logger'
 
 // eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents
 export default (err: Error | unknown, req: Request, errorStatusCode: number = 500): THttpError => {
@@ -21,9 +21,9 @@ export default (err: Error | unknown, req: Request, errorStatusCode: number = 50
     }
 
     // Log
-    logger.error(`CONTROLLER_ERROR`, {
-        meta: errorObj
-    })
+    // logger.error(`CONTROLLER_ERROR`, {
+    //     meta: errorObj
+    // })
 
     // Production Env check
     if (config.ENV === EApplicationEnviorment.PRODUCTION) {

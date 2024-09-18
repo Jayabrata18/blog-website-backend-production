@@ -1,4 +1,4 @@
- 
+
 import { IBlog } from '../types/blogType';
 import { NextFunction, Request, Response } from 'express';
 import httpResponse from '../utils/httpResponse';
@@ -49,12 +49,17 @@ export default {
     getAll: async (req: Request, res: Response, next: NextFunction) => {
         try {
             const blogs = await databaseService.getAllBlogs();
-            res.send(blogs);
+
+            // Set the Cache-Control header to 'no-store'
+            res.set('Cache-Control', 'no-store');
+            res.status(200).send(blogs);
             httpResponse(req, res, 200, responseMessage.SUCCESS, blogs);
         } catch (error) {
             httpError(next, error, req, 500);
         }
     },
+
+
     update: async (req: Request, res: Response, next: NextFunction) => {
         try {
             const { _id } = req.params;
