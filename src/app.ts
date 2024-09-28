@@ -5,7 +5,7 @@ import globalErrorHandler from './middleware/globalErrorHandler';
 import responseMessage from './constant/responseMessage';
 import helmet from 'helmet';
 import cors from 'cors';
-// import htttpError from './utils/htttpError';
+import httpError from './utils/httpError';
 
 const app: Application = express();
 
@@ -27,34 +27,33 @@ app.use(express.static(path.join(__dirname, '../', 'public')));
 //router
 app.use('/api/v1', router);
 //404 handler
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-app.use((req: Request, res: Response, __: NextFunction) => {
-    try {
-        throw new Error(responseMessage.NOT_FOUND('route'));
-    } catch {
-        res.status(404).json({
-            success: false,
-            statusCode: 404,
-            request: {
-                ip: req.ip,
-                method: req.method,
-                url: req.originalUrl,
-            },
-            message: responseMessage.NOT_FOUND('route'),
-            data: {}
-        
-        });
-    }
-
-});
-// 404 Handler
-// app.use((req: Request, _: Response, next: NextFunction) => {
+// app.use((req: Request, res: Response, __: NextFunction) => {
 //     try {
-//         throw new Error(responseMessage.NOT_FOUND('route'))
-//     } catch (err) {
-//         httpError(next, err, req, 404)
+//         throw new Error(responseMessage.NOT_FOUND('route'));
+//     } catch {
+//         res.status(404).json({
+//             success: false,
+//             statusCode: 404,
+//             request: {
+//                 ip: req.ip,
+//                 method: req.method,
+//                 url: req.originalUrl,
+//             },
+//             message: responseMessage.NOT_FOUND('route'),
+//             data: {}
+        
+//         });
 //     }
-// })
+
+// });
+// 404 Handler
+app.use((req: Request, _: Response, next: NextFunction) => {
+    try {
+        throw new Error(responseMessage.NOT_FOUND('route'))
+    } catch (err) {
+        httpError(next, err, req, 404)
+    }
+})
 
 //global error handler
 app.use(globalErrorHandler);

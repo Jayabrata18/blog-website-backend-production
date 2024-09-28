@@ -1,6 +1,6 @@
 FROM Node:20-alpine As base
 
-WORKDIR  /usr/src/ts-backend-prduction-templete
+WORKDIR  /usr/src/app
 
 COPY package*.json ./
 

@@ -1,7 +1,7 @@
 import { Connection } from 'mongoose';
 import {
     RateLimiterMongo,
-    //  RateLimiterPostgres
+    // RateLimiterPostgres
 } from 'rate-limiter-flexible';
 // import { Pool } from 'pg'
 import logger from '../utils/logger';
@@ -36,12 +36,12 @@ export const initRateLimiter = (mongooseConnection: Connection,
 
     } catch (error) {
         logger.error('Error initializing rate limiters:', error,
-            //     {
-            //     meta: {
-            //          error: (error as Error).message,
-            //          stack: (error as Error).stack,
-            //     }
-            // }
+            {
+                meta: {
+                    error: (error as Error).message,
+                    stack: (error as Error).stack,
+                }
+            }
         )
 
     }
