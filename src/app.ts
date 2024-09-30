@@ -26,6 +26,10 @@ app.use(express.json());
 app.use(express.static(path.join(__dirname, '../', 'public')));
 //router
 app.use('/api/v1', router);
+// hello world route
+app.get('/', (_: Request, res: Response) => {
+    res.send('Hello World!');
+});
 //404 handler
 // app.use((req: Request, res: Response, __: NextFunction) => {
 //     try {
