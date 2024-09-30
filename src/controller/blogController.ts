@@ -1,5 +1,5 @@
 
-import { IBlog } from '../types/blogType';
+import { IBlog, IComment } from '../types/blogType';
 import { NextFunction, Request, Response } from 'express';
 import httpResponse from '../utils/httpResponse';
 import responseMessage from '../constant/responseMessage';
@@ -11,8 +11,11 @@ import databaseService from '../service/databaseService';
 interface IBlogRequest extends Request {
     body: IBlog;
 }
+interface ICommentRequest extends Request {
+    body: IComment;
+}
 export default {
-    create: async (req: Request, res: Response, next: NextFunction) => {
+    createBlog: async (req: Request, res: Response, next: NextFunction) => {
         try {
             const { body } = req as IBlogRequest;
             // validation
@@ -33,7 +36,7 @@ export default {
         }
 
     },
-    getById: async (req: Request, res: Response, next: NextFunction) => {
+    getByIdBlog: async (req: Request, res: Response, next: NextFunction) => {
         try {
             const { _id } = req.params;
             const blog = await databaseService.getById(_id);
@@ -46,7 +49,7 @@ export default {
             httpError(next, error, req, 500);
         }
     },
-    getAll: async (req: Request, res: Response, next: NextFunction) => {
+    getAllBlogs: async (req: Request, res: Response, next: NextFunction) => {
         try {
             const blogs = await databaseService.getAllBlogs();
 
@@ -58,9 +61,7 @@ export default {
             httpError(next, error, req, 500);
         }
     },
-
-
-    update: async (req: Request, res: Response, next: NextFunction) => {
+    updateABlog: async (req: Request, res: Response, next: NextFunction) => {
         try {
             const { _id } = req.params;
             const { body } = req as IBlogRequest;
@@ -79,7 +80,7 @@ export default {
             httpError(next, error, req, 500);
         }
     },
-    delete: async (req: Request, res: Response, next: NextFunction) => {
+    deleteABlog: async (req: Request, res: Response, next: NextFunction) => {
         try {
             const { _id } = req.params;
             // delete from db
@@ -90,6 +91,119 @@ export default {
         } catch (error) {
             httpError(next, error, req, 500);
         }
-    }
+    },
+    // like a blog
+    patch: async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const { _id } = req.params;
+            const blog = await databaseService.getById(_id);
+            if (!blog) {
+                throw new Error(responseMessage.NOT_FOUND('blog'));
+            }
+            blog.totalLikes = (blog.totalLikes || 0) + 1;
+            await databaseService.update(_id, blog);
+            res.send(blog.totalLikes);
+            httpResponse(req, res, 200, responseMessage.SUCCESS);
+        } catch (error) {
+            httpError(next, error, req, 500);
+        }
+    },
+    // comment on a blog
+    postComment: async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const { _id } = req.params;
+            const blog = await databaseService.getById(_id);
+            if (!blog) {
+                throw new Error(responseMessage.NOT_FOUND('blog'));
+            }
+            const { body } = req as ICommentRequest;
+            const { error, value } = validateJoiSchema<IComment>(validateBlog, body);
+            if (error) {
+                return httpError(next, error, req, 422)
+            }
+            const { userEmail, userName, commentMessage } = value
+            //save
+            const payload: IComment = { userEmail, userName, commentMessage }
+            const newComment = await databaseService.createComment(_id, payload);
+
+            res.send(newComment);
+
+            httpResponse(req, res, 201, responseMessage.SUCCESS, newComment);
+        } catch (error) {
+            httpError(next, error, req, 500);
+        }
+
+    },
+    //     //update comment need to check
+    //     updateAComment: async (req: Request, res: Response, next: NextFunction) => {
+    //         try {
+    //             const { _id, commentId } = req.params;
+    //             const blog = await databaseService.getById(_id);
+    //             if (!blog) {
+    //                 throw new Error(responseMessage.NOT_FOUND('blog'));
+    //             }
+    //             if (!blog.comments) {
+    //                 throw new Error(responseMessage.NOT_FOUND('comments'));
+    //             }
+    //             const comment = blog.comments.find(commentId);
+    //             if (!comment) {
+    //                 throw new Error(responseMessage.NOT_FOUND('comment'));
+    //             }
+    //             const { body } = req as ICommentRequest;
+    //             const { error, value } = validateJoiSchema<IComment>(validateBlog, body);
+    //             if (error) {
+    //                 return httpError(next, error, req, 422)
+    //             }
+    //         } catch (error) {
+    //             httpError(next, error, req, 500);
+    //         }
+    //     },
+    //     // like a comment  need to check
+    //     patchComment: async (req: Request, res: Response, next: NextFunction) => {
+    //         try {
+    //             const { _id, commentId } = req.params;
+    //             const blog = await databaseService.getById(_id);
+    //             if (!blog) {
+    //                 throw new Error(responseMessage.NOT_FOUND('blog'));
+    //             }
+    //             if (!blog.comments) {
+    //                 throw new Error(responseMessage.NOT_FOUND('comments'));
+    //             }
+    //             const comment = blog.comments.find(commentId);
+    //             if (!comment) {
+    //                 throw new Error(responseMessage.NOT_FOUND('comment'));
+    //             }
+    //             comment.likes = (comment.likes || 0) + 1;
+    //             await databaseService.updateComment(_id, commentId, comment);
+    //             res.send(comment.likes);
+    //             httpResponse(req, res, 200, responseMessage.SUCCESS);
+    //         } catch (error) {
+    //             httpError(next, error, req, 500);
+    //         }
+    //     },
+    //     // delete comment 
+    //     deleteAComment: async (req: Request, res: Response, next: NextFunction) => {
+    //         try {
+    //             const { _id, commentId } = req.params;
+    //             const blog = await databaseService.getById(_id);
+    //             if (!blog) {
+    //                 throw new Error(responseMessage.NOT_FOUND('blog'));
+    //             }
+    //             if (!blog.comments) {
+    //                 throw new Error(responseMessage.NOT_FOUND('comments'));
+    //             }
+    //             const comment = blog.comments.find(commentId);
+    //             if (!comment) {
+    //                 throw new Error(responseMessage.NOT_FOUND('comment'));
+    //             }
+    //             await databaseService.deleteComment(_id, commentId);
+    //             res.sendStatus(204);
+    //             httpResponse(req, res, 200, responseMessage.SUCCESS);
+    //         } catch (error) {
+    //             httpError(next, error, req, 500);
+    //         }
+    //     },
+
+
 
 }

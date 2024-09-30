@@ -1,4 +1,3 @@
-import { EUserRole } from '../constant/userConstant';
 
 export interface IRegisterRequestBody {
     name: string;
@@ -10,26 +9,8 @@ export interface IRegisterRequestBody {
 export interface IUser {
     name: string;
     email: string;
-    phoneNumber: string;
-    // phoneNumber: {
-    //     isoCode: string;
-    //     countryCode: string;
-    //     internationalNumber: string;
-    // };
-    password: string;
-    timeZone: string;
-    role: EUserRole;
-    accountConformation: {
-        status: boolean;
-        token: string;
-        code: string;
-        timestamp: string;
-    }
-    passwordReset: {
-        token: string | null;
-        expiry: number | null;
-        lastReset: Date | null;
-    }
-    lastLogin: Date | null;
-    consent: boolean;
+    photo: string;
+    username: string;
+    last_active_at: number;
+    last_sign_in_at: number;
 }

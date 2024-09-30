@@ -1,13 +1,13 @@
-FROM Node:20-alpine As base
+FROM node:20 
 
 WORKDIR  /usr/src/app
 
 COPY package*.json ./
 
-RUN npm ci
+RUN npm install
 
 COPY . .
 
-EXPOSE 3000
+EXPOSE 5000
 
 CMD [ "npm", 'run', 'dev']

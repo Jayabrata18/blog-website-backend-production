@@ -20,8 +20,8 @@ export interface IComment {
     userEmail: string;
     userName: string;
     commentMessage: string;
-    likes: number;
-    reply: IComment[];
+    likes?: number;
+    reply?: IComment[];
 }
 
 

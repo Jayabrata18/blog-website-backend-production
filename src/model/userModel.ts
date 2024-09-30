@@ -1,5 +1,4 @@
 import mongoose from 'mongoose';
-import { EUserRole } from '../constant/userConstant';
 import { IUser } from '../types/userType';
 
 
@@ -18,81 +17,21 @@ const userSchema = new mongoose.Schema<IUser>({
         validate: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
         match: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
     },
-    phoneNumber: String,
-    // phoneNumber: {
-    //     _id: false,
-    //     isoCode: {
-    //         type: String,
-    //         required: true
-    //     },
-    //     countryCode: {
-    //         type: String,
-    //         required: true
-    //     },
-    //     internationalNumber: {
-    //         type: String,
-    //         required: true
-    //     }
-    // },
-    password: {
+    username: {
         type: String,
         required: true,
-        minlength: 4,
-        select: false
+        unique: true,
+        minlength: 3,
+        maxlength: 255
     },
-    timeZone: {
+    photo: {
         type: String,
-        required: true
     },
-    role: {
-        type: String,
-        required: true,
-        enum: EUserRole,
-        default: EUserRole.USER
+    last_active_at: {
+        type: Number,
     },
-    accountConformation: {
-        _id: false,
-        status: {
-            type: Boolean,
-            required: true,
-            default: true
-        },
-        token: {
-            type: String,
-            select: true
-        },
-        code: {
-            type: String,
-            select: true
-        },
-        timestamp: {
-            type: Date,
-            required: true,
-            default: Date.now
-        }
-    },
-    passwordReset: {
-        _id: false,
-        token: {
-            type: String,
-            default: null
-        },
-        expiry: {
-            type: Number,
-            default: null
-        },
-        lastReset: {
-            type: Date,
-            default: null
-        }
-    },
-    lastLogin: {
-        type: Date,
-        default: null
-    },
-    consent: {
-        type: Boolean,
-        required: true,
+    last_sign_in_at: {
+        type: Number,
     }
 }, { timestamps: true });
 export default mongoose.model<IUser>('user', userSchema);

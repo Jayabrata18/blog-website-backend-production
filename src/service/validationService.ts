@@ -35,6 +35,7 @@ export const validateComment = joi.object<IComment>({
     likes: joi.number().min(0).default(0),
 });
 
+
 export const validateJoiSchema = <T>(schema: joi.ObjectSchema, value: unknown) => {
     const result = schema.validate(value)
 
