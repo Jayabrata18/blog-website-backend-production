@@ -2,5 +2,4 @@ node_modules
 package-lock.json
 dist
 .env.production
-.env.development
 .DS_Store
