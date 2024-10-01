@@ -20,7 +20,6 @@ ENV PORT=5555
 
 COPY --from=builder /usr/src/app/dist ./dist
 COPY --from=builder /usr/src/app/package*.json ./
-COPY --from=builder /usr/src/app/.env.production ./
 
 RUN npm ci --only=production
 
